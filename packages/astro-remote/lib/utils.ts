@@ -70,6 +70,7 @@ export async function markdown(
       }
     }
     if ('Heading' in opts.components) {
+      
       renderer.heading = (children: string, level: number, raw: string, slugger) => {
         const slug = slugger.slug(raw);
         return `<Heading as="h${level}" href="#${slug}" text="${raw}">${children}</Heading>`
@@ -89,13 +90,18 @@ export async function markdown(
         return `<CodeSpan code=${value}>${code}</CodeSpan>`
       }
     }
+    if ('Link' in opts.components) {
+      renderer.link = (href: string, title: number, text: string, raw: string) => {
+        return `<Link href="${href}" text="${raw}"/>`
+      }
+    }
   }
   marked.use({
     gfm: true,
     smartypants: true,
     renderer
   })
-  const content = await marked.parse(dedent(input));
+  const content = await marked.parse((input));
 
   return transform(content, {
     sanitize: opts.sanitize,
